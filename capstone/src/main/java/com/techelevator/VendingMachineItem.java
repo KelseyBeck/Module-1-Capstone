@@ -31,7 +31,7 @@ public class VendingMachineItem {
         return type;
     }
 
-    public VendingMachineItem(String itemName, double price, String slot, String type) {
+    public VendingMachineItem(String slot, String itemName, double price, String type) {
         this.itemName = itemName;
         this.price = price;
         this.slot = slot;

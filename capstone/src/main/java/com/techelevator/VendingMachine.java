@@ -14,12 +14,20 @@ public class VendingMachine {
 
        try {
            Scanner dataInput = new Scanner(inputFile);
+
+
            while (dataInput.hasNextLine()) {
                String lineOfInput = dataInput.nextLine();
                String [] values = lineOfInput.split("|");
-               String name= "item"+String.valueOf(a);
 
+               for (int i = 0; i < 16; i++) {
+                   double price = Double.parseDouble(values[2]);
+                   items.add(i, new VendingMachineItem(values[0],values[1],price,values[3]));
+               }
            }
+
+
+
        } catch (FileNotFoundException e) {
            System.err.println(e.getMessage());
        }
