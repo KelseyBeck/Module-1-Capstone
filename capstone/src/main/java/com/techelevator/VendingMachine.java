@@ -8,29 +8,33 @@ import java.util.Scanner;
 
 public class VendingMachine {
 
-   public void makeItemList(){
-      List<VendingMachineItem> items = new ArrayList<VendingMachineItem>();
+   public List<VendingMachineItem> makeItemList(){
+      List<VendingMachineItem> items = new ArrayList<>();
       File inputFile = new File("vendingmachine.csv");
 
        try {
            Scanner dataInput = new Scanner(inputFile);
 
-
+           int e = 0; // e = iterator for while loop below
            while (dataInput.hasNextLine()) {
+               //for each loop, make values[] from the line
                String lineOfInput = dataInput.nextLine();
-               String [] values = lineOfInput.split("|");
+               String [] values = lineOfInput.split("\\|");
 
-               for (int i = 0; i < 16; i++) {
+               /* iterate through values[] to get constructor arguments for the new
+               VendingMachineItem added to the list at index e */
+               for (int i = 0; i < values.length; i++) {
                    double price = Double.parseDouble(values[2]);
-                   items.add(i, new VendingMachineItem(values[0],values[1],price,values[3]));
+                   items.add(e, new VendingMachineItem(values[0],values[1],price,values[3]));
                }
+               e++;
            }
-
-
 
        } catch (FileNotFoundException e) {
            System.err.println(e.getMessage());
        }
+
+       return items;
 
       /* VendingMachineItem lays = new VendingMachineItem("Lays",3.30,"A1","chips");
        items.add(lays);
