@@ -10,10 +10,9 @@ public class VendingMachine {
 
    public List<VendingMachineItem> makeItemList(){
       List<VendingMachineItem> items = new ArrayList<>();
-      File inputFile = new File("capstone/vendingmachine.csv");
+      File inputFile = new File("vendingmachine.csv");
 
        try (Scanner dataInput = new Scanner(inputFile)){
-
 
            int e = 0; // e = iterator for while loop below
            while (dataInput.hasNextLine()) {
@@ -21,12 +20,10 @@ public class VendingMachine {
                String lineOfInput = dataInput.nextLine();
                String [] values = lineOfInput.split("\\|");
 
-               /* iterate through values[] to get constructor arguments for the new
+               /* get constructor arguments from values[] for the new
                VendingMachineItem added to the list at index e */
-               for (int i = 0; i < values.length; i++) {
-                   double price = Double.parseDouble(values[2]);
-                   items.add(e, new VendingMachineItem(values[0],values[1],price,values[3]));
-               }
+               double price = Double.parseDouble(values[2]);
+               items.add(e, new VendingMachineItem(values[0],values[1],price,values[3]));
                e++;
            }
 
