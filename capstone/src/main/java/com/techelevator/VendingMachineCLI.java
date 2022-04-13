@@ -2,6 +2,7 @@ package com.techelevator;
 
 import com.techelevator.view.Menu;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
@@ -19,10 +20,18 @@ public class VendingMachineCLI {
 	public void run() {
 		while (true) {
 			String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
+			VendingMachine vendor = new VendingMachine();
+			List<VendingMachineItem> itemList = vendor.makeItemList();
+
 
 
 			if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
+				for(int i = 0; i<itemList.size(); i++) {
+					System.out.println("("+(i+1)+")"+itemList.get(i).toString());
+
+				}
+
 
 
 

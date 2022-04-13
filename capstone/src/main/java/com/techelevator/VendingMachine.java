@@ -10,10 +10,10 @@ public class VendingMachine {
 
    public List<VendingMachineItem> makeItemList(){
       List<VendingMachineItem> items = new ArrayList<>();
-      File inputFile = new File("vendingmachine.csv");
+      File inputFile = new File("capstone/vendingmachine.csv");
 
-       try {
-           Scanner dataInput = new Scanner(inputFile);
+       try (Scanner dataInput = new Scanner(inputFile)){
+
 
            int e = 0; // e = iterator for while loop below
            while (dataInput.hasNextLine()) {

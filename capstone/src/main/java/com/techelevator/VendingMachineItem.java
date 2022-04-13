@@ -37,4 +37,8 @@ public class VendingMachineItem {
         this.slot = slot;
         this.type = type;
     }
+
+    public String toString() { return this.slot +", " + this.itemName + ", " + this.price +", " + "Quantity: "+ this.quantity;}
+
+
 }
