@@ -21,8 +21,10 @@ public class VendingMachineCLI {
 	private static final String FEED_MONEY_2 = "2.00";
 	private static final String FEED_MONEY_5 = "5.00";
 	private static final String FEED_MONEY_10 = "10.00";
-	private static final String[] FEED_MONEY_OPTIONS = {FEED_MONEY_1, FEED_MONEY_2, FEED_MONEY_5, FEED_MONEY_10};
+	private static final String FEED_MONEY_DONE = "Finish feeding money";
+	private static final String[] FEED_MONEY_OPTIONS = {FEED_MONEY_1, FEED_MONEY_2, FEED_MONEY_5, FEED_MONEY_10, FEED_MONEY_DONE};
 
+	private double currentMoney = 0.00;
 
 	private Menu menu;
 
@@ -38,36 +40,51 @@ public class VendingMachineCLI {
 
 			if (mainChoice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
+				//todo: make this a vending machine method so it can be called in purchase method
+				//todo: replace with vendor.displayItems();
 				for(int i = 0; i<itemList.size(); i++) {
 					System.out.println("("+(i+1)+")"+itemList.get(i).toString());
 				}
 
 			} else if (mainChoice.equals(MAIN_MENU_OPTION_PURCHASE)) {
 				//find how to update current money in menu
-				double currentMoney = 0.00;
-				System.out.println("Current Money Provided: " + currentMoney);
+				//todo: make while loop like while (inPurchaseMenu)
+				//todo: make finish option inPurchaseMenu = false after giving change
+
+				System.out.println("Current Money Provided: $" + currentMoney);
 				String purchaseChoice = (String) menu.getChoiceFromOptions(PURCHASE_MENU_OPTIONS);
 
 				if (purchaseChoice.equals(PURCHASE_MENU_OPTION_FEED_MONEY)) {
-					String feedChoice = (String) menu.getChoiceFromOptions(FEED_MONEY_OPTIONS);
-					double feedChoiceDouble = Double.parseDouble(feedChoice);
+					// menu stays in feed money until "Finish feeding money" is selected
+					boolean feedMoreMoney = true;
+					while (feedMoreMoney) {
+						System.out.println("Please choose a dollar amount to feed into the machine:");
+						System.out.println("(Current Money Provided: $" + currentMoney+")");
 
-					// not updating currentMoney right now, needs fix
-					if (feedChoiceDouble == 1) {
-						currentMoney += 1;
-					} else if (feedChoiceDouble == 2) {
-						currentMoney += 2;
-					} else if (feedChoiceDouble == 3) {
-						currentMoney += 5;
-					} else if (feedChoiceDouble == 4) {
-						currentMoney += 10;
-					}
+						String feedChoice = (String) menu.getChoiceFromOptions(FEED_MONEY_OPTIONS);
+						//got rid of ParseDouble, just added the dollar amount based on choice
 
+						if (feedChoice.equals(FEED_MONEY_1)) {
+							currentMoney += 1;
+						} else if (feedChoice.equals(FEED_MONEY_2)) {
+							currentMoney += 2;
+						} else if (feedChoice.equals(FEED_MONEY_5)) {
+							currentMoney += 5;
+						} else if (feedChoice.equals(FEED_MONEY_10)) {
+							currentMoney += 10;
+						} else if (feedChoice.equals(FEED_MONEY_DONE)) {
+							//returns customer to
+							feedMoreMoney = false;
+						}
 
+						}
 
 				} else if (purchaseChoice.equals(PURCHASE_MENU_OPTION_SELECT_PRODUCT)) {
 
 				} else if (purchaseChoice.equals(PURCHASE_MENU_OPTION_FINISH_TRANSACTION)) {
+					//give change
+
+
 
 				}
 
@@ -78,6 +95,8 @@ public class VendingMachineCLI {
 			}
 		}
 	}
+
+
 
 	public static void main(String[] args) {
 		Menu menu = new Menu(System.in, System.out);
