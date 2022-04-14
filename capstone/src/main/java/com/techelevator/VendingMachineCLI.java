@@ -36,56 +36,69 @@ public class VendingMachineCLI {
 		while (true) {
 			String mainChoice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 			VendingMachine vendor = new VendingMachine();
-			List<VendingMachineItem> itemList = vendor.makeItemList();
+			vendor.makeItemList();
+			// List<VendingMachineItem> itemList = vendor.makeItemList();
 
 			if (mainChoice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
 				//todo: make this a vending machine method so it can be called in purchase method
 				//todo: replace with vendor.displayItems();
+				vendor.displayItems();
+				/*
 				for(int i = 0; i<itemList.size(); i++) {
 					System.out.println("("+(i+1)+")"+itemList.get(i).toString());
 				}
+				*/
 
 			} else if (mainChoice.equals(MAIN_MENU_OPTION_PURCHASE)) {
-				//find how to update current money in menu
-				//todo: make while loop like while (inPurchaseMenu)
-				//todo: make finish option inPurchaseMenu = false after giving change
+				boolean inPurchaseMenu = true;
+				while (inPurchaseMenu) {
+					//todo: make while loop like while (inPurchaseMenu)
+					//todo: make finish option inPurchaseMenu = false after giving change
 
-				System.out.println("Current Money Provided: $" + currentMoney);
-				String purchaseChoice = (String) menu.getChoiceFromOptions(PURCHASE_MENU_OPTIONS);
+					System.out.println("Current Money Provided: $" + currentMoney);
+					String purchaseChoice = (String) menu.getChoiceFromOptions(PURCHASE_MENU_OPTIONS);
 
-				if (purchaseChoice.equals(PURCHASE_MENU_OPTION_FEED_MONEY)) {
-					// menu stays in feed money until "Finish feeding money" is selected
-					boolean feedMoreMoney = true;
-					while (feedMoreMoney) {
-						System.out.println("Please choose a dollar amount to feed into the machine:");
-						System.out.println("(Current Money Provided: $" + currentMoney+")");
+					if (purchaseChoice.equals(PURCHASE_MENU_OPTION_FEED_MONEY)) {
+						// menu stays in feed money until "Finish feeding money" is selected
+						boolean feedMoreMoney = true;
+						while (feedMoreMoney) {
+							System.out.println("Please choose a dollar amount to feed into the machine:");
+							System.out.println("(Current Money Provided: $" + currentMoney + ")");
 
-						String feedChoice = (String) menu.getChoiceFromOptions(FEED_MONEY_OPTIONS);
-						//got rid of ParseDouble, just added the dollar amount based on choice
+							String feedChoice = (String) menu.getChoiceFromOptions(FEED_MONEY_OPTIONS);
+							//got rid of ParseDouble, just added the dollar amount based on choice
 
-						if (feedChoice.equals(FEED_MONEY_1)) {
-							currentMoney += 1;
-						} else if (feedChoice.equals(FEED_MONEY_2)) {
-							currentMoney += 2;
-						} else if (feedChoice.equals(FEED_MONEY_5)) {
-							currentMoney += 5;
-						} else if (feedChoice.equals(FEED_MONEY_10)) {
-							currentMoney += 10;
-						} else if (feedChoice.equals(FEED_MONEY_DONE)) {
-							//returns customer to
-							feedMoreMoney = false;
+							if (feedChoice.equals(FEED_MONEY_1)) {
+								currentMoney += 1;
+							} else if (feedChoice.equals(FEED_MONEY_2)) {
+								currentMoney += 2;
+							} else if (feedChoice.equals(FEED_MONEY_5)) {
+								currentMoney += 5;
+							} else if (feedChoice.equals(FEED_MONEY_10)) {
+								currentMoney += 10;
+							} else if (feedChoice.equals(FEED_MONEY_DONE)) {
+								//returns customer to previous menu
+								feedMoreMoney = false;
+							}
+
 						}
 
+					} else if (purchaseChoice.equals(PURCHASE_MENU_OPTION_SELECT_PRODUCT)) {
+						//create menu from list of items for customer to choose
+						String[] productOptions = new String[vendor.items.size()];
+						for (int i = 0; i < productOptions.length; i++) {
+							productOptions[i] = vendor.items.get(i).toString();
 						}
-
-				} else if (purchaseChoice.equals(PURCHASE_MENU_OPTION_SELECT_PRODUCT)) {
-
-				} else if (purchaseChoice.equals(PURCHASE_MENU_OPTION_FINISH_TRANSACTION)) {
-					//give change
+						String itemChoice = (String) menu.getChoiceFromOptions(productOptions);
 
 
 
+					} else if (purchaseChoice.equals(PURCHASE_MENU_OPTION_FINISH_TRANSACTION)) {
+						//todo: give change
+
+						inPurchaseMenu = false;
+					}
 				}
 
 

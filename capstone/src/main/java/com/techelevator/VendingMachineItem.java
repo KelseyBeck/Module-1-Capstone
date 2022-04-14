@@ -39,7 +39,7 @@ public class VendingMachineItem {
     }
 
     public String toString() {
-        String itemString = this.slot +", " + this.itemName + ", " + this.price +", " + "Quantity: "+ this.quantity;
+        String itemString = this.slot +", " + this.itemName + ", $" + this.price +", " + "Quantity: "+ this.quantity;
         if (this.quantity == 0) {
             return itemString + ", SOLD OUT!";
         } else return itemString;
