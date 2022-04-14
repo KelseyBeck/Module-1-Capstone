@@ -92,10 +92,52 @@ public class VendingMachineCLI {
 						}
 						String itemChoice = (String) menu.getChoiceFromOptions(productOptions);
 
+						for (int i = 0; i < vendor.items.size(); i++) {
+							if (itemChoice.startsWith(vendor.items.get(i).getSlot())) {
+
+								if (vendor.items.get(i).getQuantity() == 0) {
+									System.out.println("Item is sold out. Please select another.");
+
+								} else if (currentMoney < vendor.items.get(i).getPrice()) {
+									System.out.println("Insufficient funds.");
+
+								} else {
+									//subtract item quantity by 1
+									vendor.items.get(i).setQuantity(vendor.items.get(i).getQuantity()-1);
+
+									//subtract item cost from current funds
+									currentMoney -= vendor.items.get(i).getPrice();
+
+									//print name, cost, and money remaining
+									System.out.println(vendor.items.get(i).toString());
+									vendor.items.get(i).printFlavorText();
+								}
+							}
+						}
+
 
 
 					} else if (purchaseChoice.equals(PURCHASE_MENU_OPTION_FINISH_TRANSACTION)) {
 						//todo: give change
+						int quarters = 0;
+						int dimes = 0;
+						int nickels = 0;
+						double change = currentMoney;
+						while (currentMoney >= 0.25) {
+							currentMoney -= 0.25;
+							quarters++;
+						}
+						while (currentMoney >= 0.1) {
+							currentMoney -= 0.1;
+							dimes++;
+						}
+						while (currentMoney >= 0.05) {
+							currentMoney -= 0.05;
+							nickels++;
+						}
+						System.out.println("Thank you, your change is $" + change+": "
+								+ quarters+" quarters, "+ dimes + " dimes, and " + nickels + " nickels");
+
 
 						inPurchaseMenu = false;
 					}

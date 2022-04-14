@@ -4,7 +4,7 @@ public class VendingMachineItem {
     private String itemName;
     private double price;
     private String slot;
-    private int quantity=5;
+    private int quantity = 5;
     private String type;
 
     public String getItemName() {
@@ -39,12 +39,21 @@ public class VendingMachineItem {
     }
 
     public String toString() {
-        String itemString = this.slot +", " + this.itemName + ", $" + this.price +", " + "Quantity: "+ this.quantity;
+        String itemString = this.slot + ", " + this.itemName + ", $" + this.price + ", " + "Quantity: " + this.quantity;
         if (this.quantity == 0) {
             return itemString + ", SOLD OUT!";
         } else return itemString;
     }
 
-
-
+    public void printFlavorText() {
+        if (this.type.equals("Chip")) {
+            System.out.println("Crunch Crunch, Yum!");
+        } else if (this.type.equals("Candy")) {
+            System.out.println("Munch Munch, Yum!");
+        }else if (this.type.equals("Drink")) {
+            System.out.println("Glug Glug, Yum!");
+        }else if (this.type.equals("Gum")) {
+            System.out.println("Chew Chew, Yum!");
+        }
+    }
 }
