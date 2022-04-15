@@ -37,11 +37,13 @@ public class VendingMachineCLI {
 	}
 
 	public void run() {
-		while (true) {
+		//vending machine object and item list are instantiated right when program starts
+		VendingMachine vendor = new VendingMachine();
+		vendor.makeItemList();
+		// used booleans and while loops to stay in current menu until an exit option is selected
+		boolean run = true;
+		while (run) {
 			String mainChoice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
-			VendingMachine vendor = new VendingMachine();
-			vendor.makeItemList();
-			// List<VendingMachineItem> itemList = vendor.makeItemList();
 
 			if (mainChoice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
@@ -84,14 +86,18 @@ public class VendingMachineCLI {
 							}
 						}
 					} else if (purchaseChoice.equals(PURCHASE_MENU_OPTION_SELECT_PRODUCT)) {
-						//create menu from list of items for customer to choose
+						//create menu-readable array from item list for customer to choose
+						//can only select a valid item this way
 						String[] productOptions = new String[vendor.items.size()];
 						for (int i = 0; i < productOptions.length; i++) {
 							productOptions[i] = vendor.items.get(i).toString();
 						}
 						String itemChoice = (String) menu.getChoiceFromOptions(productOptions);
+						//itemChoice = VendingMachineItem chosen as a string, with slot ID as first two characters
 						pastMoney = currentMoney;
 
+						//iterate and check item list against customer input, stopping when itemChoice starts with
+						//the same slot ID as an item
 						for (int i = 0; i < vendor.items.size(); i++) {
 							if (itemChoice.startsWith(vendor.items.get(i).getSlot())) {
 
@@ -149,17 +155,16 @@ public class VendingMachineCLI {
 
 
 			} else if (mainChoice.equals(MAIN_MENU_OPTION_EXIT)) {
-				// do stuff
+				run = false;
 			}
 		}
 	}
 
 	public void log(String message) {
+		//lets us use currentMoney and pastMoney variables in VMLog.log() without making them public or static
 		String logMsg = message + " $"+moneyFormat.format(pastMoney)+" $"+moneyFormat.format(currentMoney);
 		VMLog.log(logMsg);
 	}
-
-
 
 	public static void main(String[] args) {
 		Menu menu = new Menu(System.in, System.out);
