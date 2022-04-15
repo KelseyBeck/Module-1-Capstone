@@ -2,6 +2,7 @@ package com.techelevator;
 
 import com.techelevator.view.Menu;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,6 +13,7 @@ public class VendingMachineCLI {
 	private static final String MAIN_MENU_OPTION_EXIT = "Exit";
 	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE, MAIN_MENU_OPTION_EXIT };
 
+	// added menu options instead of using scanners to limit user error and keep everything uniform
 	private static final String PURCHASE_MENU_OPTION_FEED_MONEY = "Feed Money";
 	private static final String PURCHASE_MENU_OPTION_SELECT_PRODUCT = "Select Product";
 	private static final String PURCHASE_MENU_OPTION_FINISH_TRANSACTION = "Finish Transaction";
@@ -25,6 +27,8 @@ public class VendingMachineCLI {
 	private static final String[] FEED_MONEY_OPTIONS = {FEED_MONEY_1, FEED_MONEY_2, FEED_MONEY_5, FEED_MONEY_10, FEED_MONEY_DONE};
 
 	private double currentMoney = 0.00;
+	private double pastMoney = 0.00; //used for log file, set to current money right before a transaction.
+	private static final DecimalFormat moneyFormat = new DecimalFormat("#0.00"); //prints doubles nicer
 
 	private Menu menu;
 
@@ -41,49 +45,44 @@ public class VendingMachineCLI {
 
 			if (mainChoice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
-				//todo: make this a vending machine method so it can be called in purchase method
-				//todo: replace with vendor.displayItems();
 				vendor.displayItems();
-				/*
-				for(int i = 0; i<itemList.size(); i++) {
-					System.out.println("("+(i+1)+")"+itemList.get(i).toString());
-				}
-				*/
 
 			} else if (mainChoice.equals(MAIN_MENU_OPTION_PURCHASE)) {
 				boolean inPurchaseMenu = true;
 				while (inPurchaseMenu) {
-					//todo: make while loop like while (inPurchaseMenu)
-					//todo: make finish option inPurchaseMenu = false after giving change
 
-					System.out.println("Current Money Provided: $" + currentMoney);
+					System.out.println("Current Money Provided: $" + moneyFormat.format(currentMoney));
 					String purchaseChoice = (String) menu.getChoiceFromOptions(PURCHASE_MENU_OPTIONS);
 
 					if (purchaseChoice.equals(PURCHASE_MENU_OPTION_FEED_MONEY)) {
+
 						// menu stays in feed money until "Finish feeding money" is selected
 						boolean feedMoreMoney = true;
+
 						while (feedMoreMoney) {
 							System.out.println("Please choose a dollar amount to feed into the machine:");
-							System.out.println("(Current Money Provided: $" + currentMoney + ")");
+							System.out.println("(Current Money Provided: $" + moneyFormat.format(currentMoney) + ")");
 
 							String feedChoice = (String) menu.getChoiceFromOptions(FEED_MONEY_OPTIONS);
-							//got rid of ParseDouble, just added the dollar amount based on choice
+							pastMoney = currentMoney;
 
 							if (feedChoice.equals(FEED_MONEY_1)) {
 								currentMoney += 1;
+								log("FEED:");
 							} else if (feedChoice.equals(FEED_MONEY_2)) {
 								currentMoney += 2;
+								log("FEED:");
 							} else if (feedChoice.equals(FEED_MONEY_5)) {
 								currentMoney += 5;
+								log("FEED:");
 							} else if (feedChoice.equals(FEED_MONEY_10)) {
 								currentMoney += 10;
+								log("FEED:");
 							} else if (feedChoice.equals(FEED_MONEY_DONE)) {
 								//returns customer to previous menu
 								feedMoreMoney = false;
 							}
-
 						}
-
 					} else if (purchaseChoice.equals(PURCHASE_MENU_OPTION_SELECT_PRODUCT)) {
 						//create menu from list of items for customer to choose
 						String[] productOptions = new String[vendor.items.size()];
@@ -91,6 +90,7 @@ public class VendingMachineCLI {
 							productOptions[i] = vendor.items.get(i).toString();
 						}
 						String itemChoice = (String) menu.getChoiceFromOptions(productOptions);
+						pastMoney = currentMoney;
 
 						for (int i = 0; i < vendor.items.size(); i++) {
 							if (itemChoice.startsWith(vendor.items.get(i).getSlot())) {
@@ -111,6 +111,8 @@ public class VendingMachineCLI {
 									//print name, cost, and money remaining
 									System.out.println(vendor.items.get(i).toString());
 									vendor.items.get(i).printFlavorText();
+
+									log(vendor.items.get(i).getItemName() + " " + vendor.items.get(i).getSlot());
 								}
 							}
 						}
@@ -118,7 +120,7 @@ public class VendingMachineCLI {
 
 
 					} else if (purchaseChoice.equals(PURCHASE_MENU_OPTION_FINISH_TRANSACTION)) {
-						//todo: give change
+						pastMoney = currentMoney;
 						int quarters = 0;
 						int dimes = 0;
 						int nickels = 0;
@@ -135,10 +137,11 @@ public class VendingMachineCLI {
 							currentMoney -= 0.05;
 							nickels++;
 						}
-						System.out.println("Thank you, your change is $" + change+": "
+						currentMoney = 0.00; //for possible double carryover
+						System.out.println("Thank you, your change is $" + moneyFormat.format(change) +": "
 								+ quarters+" quarters, "+ dimes + " dimes, and " + nickels + " nickels");
 
-
+						log("GIVE CHANGE: ");
 						inPurchaseMenu = false;
 					}
 				}
@@ -149,6 +152,11 @@ public class VendingMachineCLI {
 				// do stuff
 			}
 		}
+	}
+
+	public void log(String message) {
+		String logMsg = message + " $"+moneyFormat.format(pastMoney)+" $"+moneyFormat.format(currentMoney);
+		VMLog.log(logMsg);
 	}
 
 
